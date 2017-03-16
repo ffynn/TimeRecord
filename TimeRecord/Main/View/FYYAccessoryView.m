@@ -19,6 +19,11 @@
     return self;
 }
 
+- (void)setHiddenExtendingFunction:(BOOL)hidden {
+    self.insertImage.hidden = hidden;
+    self.saveDraft.hidden = hidden;
+}
+
 - (void)setViewUI {
     [self addSubview:self.insertImage];
     [_insertImage mas_makeConstraints:^(MASConstraintMaker *make) {

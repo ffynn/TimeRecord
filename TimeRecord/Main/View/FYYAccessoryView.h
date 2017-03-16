@@ -37,4 +37,11 @@
  */
 @property (nonatomic, strong) UIButton *closeKeybord;
 
+/**
+ 开启键盘拓展功能
+
+ @param open 开启
+ */
+- (void)setHiddenExtendingFunction:(BOOL)hidden;
+
 @end

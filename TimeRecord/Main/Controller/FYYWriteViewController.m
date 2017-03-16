@@ -30,6 +30,7 @@
     if (!_writeView) {
         _writeView = [[FYYWriteView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
         [_writeView fyy_setWriteBackgroundImage:@"background_paper_1"];
+        [_writeView fyy_showTimeStamp:YES];
     }
     return _writeView;
 }
