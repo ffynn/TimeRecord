@@ -1,28 +1,27 @@
 //
-//  ViewController.m
+//  FYYViewController.m
 //  TimeRecord
 //
 //  Created by FLYang on 2017/3/15.
 //  Copyright © 2017年 Fynn. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "FYYViewController.h"
 
-@interface ViewController ()
+@interface FYYViewController ()
 
 @end
 
-@implementation ViewController
+@implementation FYYViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
 }
 
 

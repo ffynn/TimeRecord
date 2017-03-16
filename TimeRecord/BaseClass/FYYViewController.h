@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  FYYViewController.h
 //  TimeRecord
 //
 //  Created by FLYang on 2017/3/15.
@@ -7,9 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FYYMacro.h"
 
-@interface ViewController : UIViewController
-
+@interface FYYViewController : UIViewController
 
 @end
-
