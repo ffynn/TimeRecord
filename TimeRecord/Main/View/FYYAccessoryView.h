@@ -40,7 +40,7 @@
 /**
  开启键盘拓展功能
 
- @param open 开启
+ @param hidden 开启
  */
 - (void)setHiddenExtendingFunction:(BOOL)hidden;
 

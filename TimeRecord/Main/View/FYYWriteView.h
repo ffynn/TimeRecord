@@ -10,10 +10,21 @@
 #import "FYYMacro.h"
 #import "FYYAccessoryView.h"
 
+@protocol FYYWriteDelegate <NSObject>
+
+@optional
+- (void)fyy_beginWrite;
+- (void)fyy_endWrite;
+
+@end
+
 @interface FYYWriteView : UIScrollView <
     UITextViewDelegate,
     FYYAccessoryViewDelegate
 >
+
+
+@property (nonatomic, weak) id <FYYWriteDelegate> write_delegate;
 
 /**
  标题输入框
@@ -57,5 +68,12 @@
  @param image 背景图片
  */
 - (void)fyy_setWriteBackgroundImage:(NSString *)image;
+
+/**
+ 改变字体颜色
+
+ @param color 颜色
+ */
+- (void)fyy_setWriteTextColor:(NSString *)color;
 
 @end

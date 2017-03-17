@@ -14,8 +14,9 @@ static const NSInteger BOTTOM_MARGIN = 70;
 static const NSInteger TOP_MARGIN = 60;
 
 @interface FYYWriteView () {
-    CGFloat _keyboardH;     //  弹出的键盘高度
-    CGFloat _contentTextH;  //  正文内容的高度
+    CGFloat   _keyboardH;         //  弹出的键盘高度
+    CGFloat   _contentTextH;      //  正文内容的高度
+    NSString *_textColor;         //  文字颜色
 }
 
 @end
@@ -37,6 +38,8 @@ static const NSInteger TOP_MARGIN = 60;
 - (void)setViewUI {
     _contentTextH = 0.0f;
     _keyboardH = 0.0f;
+    _textColor = @"#411616";
+    
     [self set_addTitleInputBoxView];
     [self set_addContentInputBoxView];
 }
@@ -85,7 +88,7 @@ static const NSInteger TOP_MARGIN = 60;
         _titleInputBox = [[UITextView alloc] init];
         _titleInputBox.backgroundColor = [UIColor colorWithHexString:@"#FFFFFF" alpha:0.0f];
         _titleInputBox.font = [UIFont fontWithName:FONT_NAME size:22.0f];
-        _titleInputBox.textColor = [UIColor colorWithHexString:FONT_COLOR];
+        _titleInputBox.textColor = [UIColor colorWithHexString:_textColor];
         _titleInputBox.textAlignment = NSTextAlignmentCenter;
         _titleInputBox.scrollEnabled = NO;
         _titleInputBox.returnKeyType = UIReturnKeyDone;
@@ -100,7 +103,7 @@ static const NSInteger TOP_MARGIN = 60;
     if (!_titlePlaceholder) {
         _titlePlaceholder = [[UILabel alloc] init];
         _titlePlaceholder.font = [UIFont fontWithName:FONT_NAME size:22.0f];
-        _titlePlaceholder.textColor = [UIColor colorWithHexString:FONT_COLOR alpha:0.8f];
+        _titlePlaceholder.textColor = [UIColor colorWithHexString:_textColor alpha:0.8f];
         _titlePlaceholder.textAlignment = NSTextAlignmentCenter;
         _titlePlaceholder.text = @"输入标题";
     }
@@ -247,7 +250,7 @@ static const NSInteger TOP_MARGIN = 60;
         _contentInputBox.textAlignment = NSTextAlignmentCenter;
         _contentInputBox.inputAccessoryView = self.accessoryView;
         _contentInputBox.font = [UIFont fontWithName:FONT_NAME size:16.0f];
-        _contentInputBox.textColor = [UIColor colorWithHexString:FONT_COLOR];
+        _contentInputBox.textColor = [UIColor colorWithHexString:_textColor];
         _contentInputBox.scrollEnabled = NO;
         _contentInputBox.delegate = self;
         _contentInputBox.showsVerticalScrollIndicator = NO;
@@ -259,7 +262,7 @@ static const NSInteger TOP_MARGIN = 60;
     if (!_contentPlaceholder) {
         _contentPlaceholder = [[UILabel alloc] init];
         _contentPlaceholder.font = [UIFont fontWithName:FONT_NAME size:16.0f];
-        _contentPlaceholder.textColor = [UIColor colorWithHexString:FONT_COLOR alpha:0.8f];
+        _contentPlaceholder.textColor = [UIColor colorWithHexString:_textColor alpha:0.8f];
         _contentPlaceholder.textAlignment = NSTextAlignmentCenter;
         _contentPlaceholder.text = @"输入正文";
     }
@@ -275,7 +278,7 @@ static const NSInteger TOP_MARGIN = 60;
     
     NSDictionary *attributes = @{
                                  NSParagraphStyleAttributeName:paragraphStyle,
-                                 NSForegroundColorAttributeName:[UIColor colorWithHexString:FONT_COLOR],
+                                 NSForegroundColorAttributeName:[UIColor colorWithHexString:_textColor],
                                  NSFontAttributeName:[UIFont fontWithName:FONT_NAME size:16.0f]
                                  };
     
@@ -353,7 +356,7 @@ static const NSInteger TOP_MARGIN = 60;
     if (!_timeStamp) {
         _timeStamp = [[UILabel alloc] init];
         _timeStamp.font = [UIFont fontWithName:FONT_NAME size:14.0f];
-        _timeStamp.textColor = [UIColor colorWithHexString:FONT_COLOR alpha:0.7f];
+        _timeStamp.textColor = [UIColor colorWithHexString:_textColor alpha:0.7f];
         _timeStamp.textAlignment = NSTextAlignmentCenter;
     }
     return _timeStamp;
@@ -403,12 +406,20 @@ static const NSInteger TOP_MARGIN = 60;
     self.contentOffset = CGPointMake(0, 0);
     self.contentInputBox.scrollEnabled = YES;
     [self adjustTheHeightOfTheWriteView:YES];
+    
+    if ([self.write_delegate respondsToSelector:@selector(fyy_beginWrite)]) {
+        [self.write_delegate fyy_beginWrite];
+    }
 }
 
 #pragma mark 键盘落下
 - (void)fyy_getKeyboardFrameHeightOfHide:(NSNotification *)aNotification {
     self.contentInputBox.scrollEnabled = NO;
     [self adjustTheHeightOfTheWriteView:NO];
+    
+    if ([self.write_delegate respondsToSelector:@selector(fyy_endWrite)]) {
+        [self.write_delegate fyy_endWrite];
+    }
 }
 
 #pragma mark - 调整正文输入框的高度
@@ -446,6 +457,25 @@ static const NSInteger TOP_MARGIN = 60;
         
         self.contentSize = CGSizeMake(SCREEN_WIDTH, SCREEN_HEIGHT);
     }
+}
+
+#pragma mark - 改变字体颜色
+- (void)fyy_setWriteTextColor:(NSString *)color {
+    _textColor = color;
+    [self changeWriteTextColor:color];
+}
+
+- (void)changeWriteTextColor:(NSString *)color {
+    self.titleInputBox.textColor = [UIColor colorWithHexString:color alpha:1.0f];
+    self.contentInputBox.textColor = [UIColor colorWithHexString:color alpha:1.0f];
+    self.titlePlaceholder.textColor = [UIColor colorWithHexString:color alpha:0.8f];
+    self.contentPlaceholder.textColor = [UIColor colorWithHexString:color alpha:0.7f];
+    self.timeStamp.textColor = [UIColor colorWithHexString:color alpha:0.7f];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 @end
