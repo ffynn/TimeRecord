@@ -9,10 +9,13 @@
 #import "FYYStyleToolView.h"
 
 static const NSInteger ColorButtonTag = 100;
+static const NSInteger PaperButtonTag = 110;
+static const CGFloat ToolViewHeight = 110;
 
 @interface FYYStyleToolView () {
     NSString *_chooseColor; //  选择的颜色
     NSArray  *_colorArr;    //  全部的颜色
+    NSArray  *_paperArr;    //  全部的背景
 }
 
 @end
@@ -24,7 +27,7 @@ static const NSInteger ColorButtonTag = 100;
     if (self) {
         self.backgroundColor = [UIColor colorWithHexString:@"#FFFFFF" alpha:0.0f];
         [self addPanGestureRecognizer];
-        _colorArr = @[@"#411616", @"#222222", @"#666666", @"#B11212", @"#105F9C", @"#CFB136"];
+        _colorArr = @[@"#411616", @"#222222", @"#FFFFFF", @"#B11212", @"#105F9C", @"#CFB136"];
         [self setViewUI];
     }
     return self;
@@ -32,7 +35,7 @@ static const NSInteger ColorButtonTag = 100;
 
 #pragma mark - 恢复默认
 - (void)fyy_restoreTheDefault {
-    self.frame = CGRectMake(0, SCREEN_HEIGHT - 30, SCREEN_WIDTH, 90);
+    self.frame = CGRectMake(0, SCREEN_HEIGHT - 30, SCREEN_WIDTH, ToolViewHeight);
     self.openButton.selected = NO;
 }
 
@@ -51,13 +54,13 @@ static const NSInteger ColorButtonTag = 100;
 }
 
 - (void)changeViewFrame:(CGFloat)y {
-    CGFloat translationY = y < -60 ? -60 : y;
+    CGFloat translationY = y < -80 ? -80 : y;
     
     CGRect formerFrame = self.frame;
-    formerFrame = CGRectMake(0, SCREEN_HEIGHT - 30 + translationY, SCREEN_WIDTH, 90);
+    formerFrame = CGRectMake(0, SCREEN_HEIGHT - 30 + translationY, SCREEN_WIDTH, ToolViewHeight);
     self.frame = formerFrame;
     
-    if (translationY <= -40) {
+    if (translationY <= -60) {
         self.openButton.selected = YES;
     }
 }
@@ -77,16 +80,24 @@ static const NSInteger ColorButtonTag = 100;
         make.top.equalTo(_openButton.mas_bottom).with.offset(-1);
     }];
     
-    [self.backView addSubview:self.editStyle];
-    [_editStyle mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.backView addSubview:self.colorStyle];
+    [_colorStyle mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(40, 40));
         make.left.equalTo(_backView.mas_left).with.offset(20);
         make.centerY.equalTo(_backView);
     }];
     
     [self creatTextColorButton];
+    
+//    [self.backView addSubview:self.paperStyle];
+//    [_paperStyle mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.size.mas_equalTo(CGSizeMake(40, 40));
+//        make.left.equalTo(_colorStyle.mas_right).with.offset(10);
+//        make.centerY.equalTo(_backView.mas_centerY).with.offset(2);
+//    }];
 }
 
+#pragma mark - 打开编辑工具栏
 - (UIButton *)openButton {
     if (!_openButton) {
         _openButton = [[UIButton alloc] init];
@@ -104,11 +115,11 @@ static const NSInteger ColorButtonTag = 100;
     
     if (button.selected == NO) {
         button.selected = YES;
-        defaultFrame = CGRectMake(0, SCREEN_HEIGHT - 90, SCREEN_WIDTH, 90);
+        defaultFrame = CGRectMake(0, SCREEN_HEIGHT - ToolViewHeight, SCREEN_WIDTH, ToolViewHeight);
     
     } else if (button.selected == YES) {
         button.selected = NO;
-        defaultFrame = CGRectMake(0, SCREEN_HEIGHT - 30, SCREEN_WIDTH, 90);
+        defaultFrame = CGRectMake(0, SCREEN_HEIGHT - 30, SCREEN_WIDTH, ToolViewHeight);
     }
     
     [UIView animateWithDuration:0.3 animations:^{
@@ -116,6 +127,7 @@ static const NSInteger ColorButtonTag = 100;
     }];
 }
 
+#pragma mark - 工具栏的背景
 - (UIView *)backView {
     if (!_backView) {
         _backView = [[UIView alloc] init];
@@ -124,25 +136,56 @@ static const NSInteger ColorButtonTag = 100;
     return _backView;
 }
 
-- (UIButton *)editStyle {
-    if (!_editStyle) {
-        _editStyle = [[UIButton alloc] init];
-        [_editStyle setImage:[UIImage imageNamed:@"icon_style_edit"] forState:(UIControlStateNormal)];
-        [_editStyle setImage:[UIImage imageNamed:@"icon_style_edit"] forState:(UIControlStateHighlighted)];
-        [_editStyle setImage:[UIImage imageNamed:@"icon_style_edit_back"] forState:(UIControlStateSelected)];
-        [_editStyle addTarget:self action:@selector(editStyleClick:) forControlEvents:(UIControlEventTouchUpInside)];
-        _editStyle.selected = NO;
+#pragma mark - 更换背景稿纸
+- (UIButton *)paperStyle {
+    if (!_paperStyle) {
+        _paperStyle = [[UIButton alloc] init];
+        [_paperStyle setImage:[UIImage imageNamed:@"icon_style_paper"] forState:(UIControlStateNormal)];
+        [_paperStyle setImage:[UIImage imageNamed:@"icon_style_paper"] forState:(UIControlStateHighlighted)];
+        [_paperStyle setImage:[UIImage imageNamed:@"icon_style_edit_back"] forState:(UIControlStateSelected)];
+        [_paperStyle addTarget:self action:@selector(paperStyleClick:) forControlEvents:(UIControlEventTouchUpInside)];
+        _paperStyle.selected = NO;
     }
-    return _editStyle;
+    return _paperStyle;
 }
 
-- (void)editStyleClick:(UIButton *)button {
+- (void)paperStyleClick:(UIButton *)button {
+    if (button.selected == NO) {
+        button.selected = YES;
+        
+    } else if (button.selected == YES) {
+        button.selected = NO;
+    }
+    
+    if ([self.tool_delegate respondsToSelector:@selector(fyy_changeWriteTextPaper:)]) {
+        [self.tool_delegate fyy_changeWriteTextPaper:@"background_paper_6"];
+    }
+}
+
+#pragma mark - 更换文本颜色
+- (UIButton *)colorStyle {
+    if (!_colorStyle) {
+        _colorStyle = [[UIButton alloc] init];
+        [_colorStyle setImage:[UIImage imageNamed:@"icon_style_edit"] forState:(UIControlStateNormal)];
+        [_colorStyle setImage:[UIImage imageNamed:@"icon_style_edit"] forState:(UIControlStateHighlighted)];
+        [_colorStyle setImage:[UIImage imageNamed:@"icon_style_edit_back"] forState:(UIControlStateSelected)];
+        [_colorStyle addTarget:self action:@selector(colorStyleClick:) forControlEvents:(UIControlEventTouchUpInside)];
+        _colorStyle.selected = NO;
+    }
+    return _colorStyle;
+}
+
+- (void)colorStyleClick:(UIButton *)button {
     [self changeColorButtonFrame:button.selected];
+    [self changePaperButtonFrame:button.selected];
     
     if (button.selected == NO) {
         button.selected = YES;
+        self.paperStyle.hidden = YES;
+        
     } else if (button.selected == YES) {
         button.selected = NO;
+        self.paperStyle.hidden = NO;
     }
 }
 
@@ -150,15 +193,13 @@ static const NSInteger ColorButtonTag = 100;
     CGFloat margin = hidden == YES ? 0 : (SCREEN_WIDTH - 80)/self.colorButtonMarr.count;
     
     NSInteger index = 0;
-    
     for (UIButton *colorBtn in self.colorButtonMarr) {
         ++ index;
         if (hidden == NO) {
             colorBtn.hidden = hidden;
         }
         [colorBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(_editStyle.mas_right).with.offset(20 + margin * (index - 1));
-            make.centerY.equalTo(_editStyle.mas_centerY).with.offset(0);
+            make.left.equalTo(_colorStyle.mas_right).with.offset(20 + margin * (index - 1));
         }];
         
         [UIView animateWithDuration:0.5
@@ -177,9 +218,39 @@ static const NSInteger ColorButtonTag = 100;
     }
 }
 
+- (void)changePaperButtonFrame:(BOOL)hidden {
+    CGFloat margin = hidden == YES ? 0 : (SCREEN_WIDTH - 80)/self.paperButtonMarr.count;
+    
+    NSInteger index = 0;
+    for (UIButton *paperBtn in self.paperButtonMarr) {
+        ++ index;
+        if (hidden == NO) {
+            paperBtn.hidden = hidden;
+        }
+        [paperBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(_colorStyle.mas_right).with.offset(20 + margin * (index - 1));
+        }];
+        
+        [UIView animateWithDuration:0.5
+                              delay:0.0
+             usingSpringWithDamping:0.8
+              initialSpringVelocity:0.0
+                            options:(UIViewAnimationOptionCurveEaseOut) animations:^{
+                                paperBtn.alpha = hidden == YES ? 0.0f : 1.0f;
+                                [self layoutIfNeeded];
+                            }
+                         completion:^(BOOL finished) {
+                             if (hidden == YES) {
+                                 paperBtn.hidden = YES;
+                             }
+                         }];
+    }
+}
+
 - (void)creatTextColorButton {
+    //  颜色
     for (NSInteger idx = 0; idx < _colorArr.count; ++ idx) {
-        UIButton *colorBtn = [[UIButton alloc] initWithFrame:CGRectMake(40 * idx, 0, 30, 30)];
+        UIButton *colorBtn = [[UIButton alloc] init];
         colorBtn.backgroundColor = [UIColor colorWithHexString:_colorArr[idx] alpha:1.0f];
         colorBtn.layer.cornerRadius = 15;
         colorBtn.layer.masksToBounds = YES;
@@ -192,11 +263,33 @@ static const NSInteger ColorButtonTag = 100;
         [self addSubview:colorBtn];
         [colorBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.size.mas_equalTo(CGSizeMake(30, 30));
-            make.left.equalTo(_editStyle.mas_right).with.offset(20);
-            make.centerY.equalTo(_editStyle.mas_centerY).with.offset(2);
+            make.left.equalTo(_colorStyle.mas_right).with.offset(20);
+            make.bottom.equalTo(_backView.mas_centerY).with.offset(-4);
         }];
         
         [self.colorButtonMarr addObject:colorBtn];
+    }
+    
+    //  稿纸
+    for (NSInteger jdx = 0; jdx < _colorArr.count; ++ jdx) {
+        UIButton *paperBtn = [[UIButton alloc] init];
+        [paperBtn setImage:[UIImage imageNamed:[NSString stringWithFormat:@"background_paper_%zi", jdx + 1]] forState:(UIControlStateNormal)];
+        paperBtn.layer.cornerRadius = 15;
+        paperBtn.layer.masksToBounds = YES;
+        paperBtn.layer.borderWidth = 1.0f;
+        paperBtn.layer.borderColor = [UIColor colorWithHexString:@"#CECECE" alpha:1.0f].CGColor;
+        paperBtn.tag = PaperButtonTag + jdx;
+        [paperBtn addTarget:self action:@selector(changePaper:) forControlEvents:(UIControlEventTouchUpInside)];
+        paperBtn.hidden = YES;
+        
+        [self addSubview:paperBtn];
+        [paperBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(30, 30));
+            make.left.equalTo(_colorStyle.mas_right).with.offset(20);
+            make.top.equalTo(_backView.mas_centerY).with.offset(4);
+        }];
+        
+        [self.paperButtonMarr addObject:paperBtn];
     }
 }
 
@@ -209,12 +302,26 @@ static const NSInteger ColorButtonTag = 100;
     }
 }
 
+- (void)changePaper:(UIButton *)button {
+    NSInteger index = button.tag - PaperButtonTag;
+    if ([self.tool_delegate respondsToSelector:@selector(fyy_changeWriteTextColor:)]) {
+        [self.tool_delegate fyy_changeWriteTextPaper:[NSString stringWithFormat:@"background_paper_%zi", index + 1]];
+    }
+}
+
 #pragma mark - 
 - (NSMutableArray *)colorButtonMarr {
     if (!_colorButtonMarr) {
         _colorButtonMarr = [NSMutableArray array];
     }
     return _colorButtonMarr;
+}
+
+- (NSMutableArray *)paperButtonMarr {
+    if (!_paperButtonMarr) {
+        _paperButtonMarr = [NSMutableArray array];
+    }
+    return _paperButtonMarr;
 }
 
 @end

@@ -63,17 +63,17 @@
 - (void)fyy_showTimeStamp:(BOOL)show;
 
 /**
- 设置背景（稿纸）
-
- @param image 背景图片
- */
-- (void)fyy_setWriteBackgroundImage:(NSString *)image;
-
-/**
  改变字体颜色
 
  @param color 颜色
  */
 - (void)fyy_setWriteTextColor:(NSString *)color;
+
+/**
+ 改变稿纸的背景
+
+ @param paper 稿纸名称
+ */
+- (void)fyy_setWriteViewPaper:(NSString *)paper;
 
 @end

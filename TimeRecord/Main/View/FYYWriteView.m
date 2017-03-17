@@ -26,6 +26,7 @@ static const NSInteger TOP_MARGIN = 60;
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background_paper_1"]];
         self.contentSize = CGSizeMake(SCREEN_WIDTH, SCREEN_HEIGHT);
         self.showsVerticalScrollIndicator = NO;
         [self set_addNotification];
@@ -42,15 +43,6 @@ static const NSInteger TOP_MARGIN = 60;
     
     [self set_addTitleInputBoxView];
     [self set_addContentInputBoxView];
-}
-
-#pragma mark - 设置背景稿纸
-- (void)fyy_setWriteBackgroundImage:(NSString *)image {
-    if (image.length) {
-        self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:image]];
-    } else {
-        self.backgroundColor = [UIColor whiteColor];
-    }
 }
 
 #pragma mark - 标题输入框
@@ -129,6 +121,7 @@ static const NSInteger TOP_MARGIN = 60;
 }
 
 #pragma mark 输入监测的代理
+
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     if (textView == self.titleInputBox) {
         [self.accessoryView setHiddenExtendingFunction:YES];
@@ -471,6 +464,15 @@ static const NSInteger TOP_MARGIN = 60;
     self.titlePlaceholder.textColor = [UIColor colorWithHexString:color alpha:0.8f];
     self.contentPlaceholder.textColor = [UIColor colorWithHexString:color alpha:0.7f];
     self.timeStamp.textColor = [UIColor colorWithHexString:color alpha:0.7f];
+}
+
+#pragma mark - 改变稿纸背景
+- (void)fyy_setWriteViewPaper:(NSString *)paper {
+    if (paper.length) {
+        self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:paper]];
+    } else {
+        self.backgroundColor = [UIColor whiteColor];
+    }
 }
 
 - (void)dealloc {

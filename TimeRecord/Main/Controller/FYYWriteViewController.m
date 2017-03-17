@@ -31,7 +31,6 @@
 - (FYYWriteView *)writeView {
     if (!_writeView) {
         _writeView = [[FYYWriteView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-        [_writeView fyy_setWriteBackgroundImage:@"background_paper_1"];
         [_writeView fyy_showTimeStamp:YES];
         _writeView.write_delegate = self;
     }
@@ -49,7 +48,7 @@
 
 - (FYYStyleToolView *)toolView {
     if (!_toolView) {
-        _toolView = [[FYYStyleToolView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - 30, SCREEN_WIDTH, 90)];
+        _toolView = [[FYYStyleToolView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - 30, SCREEN_WIDTH, 110)];
         _toolView.tool_delegate = self;
     }
     return _toolView;
@@ -60,6 +59,13 @@
  */
 - (void)fyy_changeWriteTextColor:(NSString *)color {
     [self.writeView fyy_setWriteTextColor:color];
+}
+
+/**
+ 改变稿纸背景
+ */
+- (void)fyy_changeWriteTextPaper:(NSString *)paper {
+    [self.writeView fyy_setWriteViewPaper:paper];
 }
 
 #pragma mark - 系统状态栏样式

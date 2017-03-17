@@ -13,6 +13,7 @@
 
 @optional
 - (void)fyy_changeWriteTextColor:(NSString *)color;
+- (void)fyy_changeWriteTextPaper:(NSString *)paper;
 
 @end
 
@@ -31,9 +32,14 @@
 @property (nonatomic, strong) UIView *backView;
 
 /**
- 编辑样式
+ 编辑颜色按钮
  */
-@property (nonatomic, strong) UIButton *editStyle;
+@property (nonatomic, strong) UIButton *colorStyle;
+
+/**
+ 稿纸背景按钮
+ */
+@property (nonatomic, strong) UIButton *paperStyle;
 
 /**
  工具栏恢复默认
@@ -41,5 +47,6 @@
 - (void)fyy_restoreTheDefault;
 
 @property (nonatomic, strong) NSMutableArray *colorButtonMarr;
+@property (nonatomic, strong) NSMutableArray *paperButtonMarr;
 
 @end
