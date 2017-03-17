@@ -1,38 +1,37 @@
 # TimeRecord
 
-这是一个支持文本录入编辑的工具、主要用于图文制作以及制作完成后的导出与分享;
+◆ 这是一个支持文本录入编辑的工具、主要用于图文制作以及制作完成后的导出与分享;
 
-项目正在持续完善...
+◆ 项目正在持续完善...
 
-此项目文本样式以及图片素材来源于iOS版「萝卜书摘」，仅做个人练习使用，如有侵犯请联系本人删除:-)
+◆ 此项目文本样式以及图片素材来源于iOS版「萝卜书摘」，仅做个人练习使用，如有侵犯请联系本人删除:-)
 
 ---
 
-项目文件夹「Desgin」包含所有的设计稿原型及所用素材;
+◆ 项目文件夹「Desgin」包含所有的设计稿原型及所用素材;
 
 ![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_sketch.png)
 
 ---
 
-也可以使用超级标注查看具体排版详情
+◆ 也可以使用超级标注查看具体排版详情
 
 ![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_board.png)
 
 ---
 
-以下是现阶段完成的功能界面
-![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_1.png)
-![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_2.png)
-![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_3.png)
-![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_4.png)
-![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_5.png)
-![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_6.png)
+◆ 现阶段完成的功能界面
+![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_1.PNG)
+![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_2.PNG)
+![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_3.PNG)
+![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_4.PNG)
+![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_5.PNG)
+![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_6.PNG)
 
 ---
-对项目的记录更新
+◆ 对项目的记录更新
 ---
 
----
 已完成：
 
 ① 标题输入、输入折行和长度限制；
