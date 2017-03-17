@@ -10,6 +10,15 @@
 #import "FYYPromptView.h"
 
 static const NSInteger MAX_TITLE_TEXT = 18;
+static const NSInteger BOTTOM_MARGIN = 70;
+static const NSInteger TOP_MARGIN = 60;
+
+@interface FYYWriteView () {
+    CGFloat _keyboardH;     //  弹出的键盘高度
+    CGFloat _contentTextH;  //  正文内容的高度
+}
+
+@end
 
 @implementation FYYWriteView
 
@@ -17,6 +26,8 @@ static const NSInteger MAX_TITLE_TEXT = 18;
     self = [super initWithFrame:frame];
     if (self) {
         self.contentSize = CGSizeMake(SCREEN_WIDTH, SCREEN_HEIGHT);
+        self.showsVerticalScrollIndicator = NO;
+        [self set_addNotification];
         [self setViewUI];
     }
     return self;
@@ -24,8 +35,9 @@ static const NSInteger MAX_TITLE_TEXT = 18;
 
 #pragma mark - 设置视图控件布局
 - (void)setViewUI {
+    _contentTextH = 0.0f;
+    _keyboardH = 0.0f;
     [self set_addTitleInputBoxView];
-    
     [self set_addContentInputBoxView];
 }
 
@@ -76,8 +88,10 @@ static const NSInteger MAX_TITLE_TEXT = 18;
         _titleInputBox.textColor = [UIColor colorWithHexString:FONT_COLOR];
         _titleInputBox.textAlignment = NSTextAlignmentCenter;
         _titleInputBox.scrollEnabled = NO;
+        _titleInputBox.returnKeyType = UIReturnKeyDone;
         _titleInputBox.inputAccessoryView = self.accessoryView;
         _titleInputBox.delegate = self;
+        _titleInputBox.showsVerticalScrollIndicator = NO;
     }
     return _titleInputBox;
 }
@@ -86,7 +100,7 @@ static const NSInteger MAX_TITLE_TEXT = 18;
     if (!_titlePlaceholder) {
         _titlePlaceholder = [[UILabel alloc] init];
         _titlePlaceholder.font = [UIFont fontWithName:FONT_NAME size:22.0f];
-        _titlePlaceholder.textColor = [UIColor colorWithHexString:FONT_COLOR];
+        _titlePlaceholder.textColor = [UIColor colorWithHexString:FONT_COLOR alpha:0.8f];
         _titlePlaceholder.textAlignment = NSTextAlignmentCenter;
         _titlePlaceholder.text = @"输入标题";
     }
@@ -166,14 +180,6 @@ static const NSInteger MAX_TITLE_TEXT = 18;
     }
 }
 
-- (void)textViewDidEndEditing:(UITextView *)textView {
-//    if (textView == self.titleInputBox) {
-//        if (textView.text.length == 0) {
-//            self.titlePlaceholder.alpha = 1.0f;
-//        }
-//    }
-}
-
 - (void)fyy_screeningInputHighlightingText:(UITextView *)textView {
     UITextRange *selectedRange = [textView markedTextRange];
     //  获取高亮部分
@@ -200,6 +206,7 @@ static const NSInteger MAX_TITLE_TEXT = 18;
         text = @"输入标题";
     }
     
+    //  折行
     NSInteger lineNum = 1;
     if (text.length > 9) {
         text = [text substringToIndex:9];
@@ -220,14 +227,16 @@ static const NSInteger MAX_TITLE_TEXT = 18;
     [self addSubview:self.contentInputBox];
     [_contentInputBox mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(SCREEN_WIDTH - 40);
-        make.height.mas_equalTo(@35);
-        make.top.equalTo(_titleInputBox.mas_bottom).with.offset(50);
+        make.top.equalTo(_titleInputBox.mas_bottom).with.offset(30);
+        make.bottom.equalTo(self.mas_top).with.offset(SCREEN_HEIGHT - BOTTOM_MARGIN);
         make.centerX.equalTo(self);
     }];
     
     [self addSubview:self.contentPlaceholder];
     [_contentPlaceholder mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.centerY.equalTo(_contentInputBox);
+        make.centerX.equalTo(_contentInputBox);
+        make.top.left.right.equalTo(_contentInputBox).with.offset(0);
+        make.height.mas_equalTo(@35);
     }];
 }
 
@@ -236,11 +245,12 @@ static const NSInteger MAX_TITLE_TEXT = 18;
         _contentInputBox = [[UITextView alloc] init];
         _contentInputBox.backgroundColor = [UIColor colorWithHexString:@"#FFFFFF" alpha:0.0f];
         _contentInputBox.textAlignment = NSTextAlignmentCenter;
-        _contentInputBox.scrollEnabled = NO;
         _contentInputBox.inputAccessoryView = self.accessoryView;
         _contentInputBox.font = [UIFont fontWithName:FONT_NAME size:16.0f];
         _contentInputBox.textColor = [UIColor colorWithHexString:FONT_COLOR];
+        _contentInputBox.scrollEnabled = NO;
         _contentInputBox.delegate = self;
+        _contentInputBox.showsVerticalScrollIndicator = NO;
     }
     return _contentInputBox;
 }
@@ -249,7 +259,7 @@ static const NSInteger MAX_TITLE_TEXT = 18;
     if (!_contentPlaceholder) {
         _contentPlaceholder = [[UILabel alloc] init];
         _contentPlaceholder.font = [UIFont fontWithName:FONT_NAME size:16.0f];
-        _contentPlaceholder.textColor = [UIColor colorWithHexString:FONT_COLOR alpha:0.7f];
+        _contentPlaceholder.textColor = [UIColor colorWithHexString:FONT_COLOR alpha:0.8f];
         _contentPlaceholder.textAlignment = NSTextAlignmentCenter;
         _contentPlaceholder.text = @"输入正文";
     }
@@ -273,28 +283,20 @@ static const NSInteger MAX_TITLE_TEXT = 18;
     
     self.contentInputBox.attributedText = attributedString;
     
-    if (text.length == 0) {
-        text = @"输入正文";
-    }
-    
     [self changeContentInputBox:text attributes:attributes];
 }
 
-//  调整正文的宽高
+#pragma mark 正文的高度
 - (void)changeContentInputBox:(NSString *)text attributes:(NSDictionary *)attributes {
-    CGFloat textHeight = [text boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 40, MAXFLOAT)
+    CGSize textSize = [text boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 40, MAXFLOAT)
                                             options:\
                           NSStringDrawingTruncatesLastVisibleLine |
                           NSStringDrawingUsesLineFragmentOrigin |
-                          NSStringDrawingUsesFontLeading |
-                          NSStringDrawingUsesDeviceMetrics
+                          NSStringDrawingUsesFontLeading
                                          attributes:attributes
-                                            context:nil].size.height + 20;
+                                            context:nil].size;
     
-    
-    [self.contentInputBox mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(@(textHeight > 35 ? textHeight : 35));
-    }];
+    _contentTextH = textSize.height + 50;
 }
 
 #pragma mark - 底部打开编辑样式的按钮
@@ -337,10 +339,11 @@ static const NSInteger MAX_TITLE_TEXT = 18;
 #pragma mark - 设置时间戳
 - (void)fyy_showTimeStamp:(BOOL)show {
     if (show) {
+        self.timeStamp.text = [self systemTimeDate];
         [self addSubview:self.timeStamp];
         [_timeStamp mas_makeConstraints:^(MASConstraintMaker *make) {
             make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH - 40, 15));
-            make.top.equalTo(_contentInputBox.mas_bottom).with.offset(100);
+            make.top.equalTo(_contentInputBox.mas_bottom).with.offset(10);
             make.centerX.equalTo(self);
         }];
     }
@@ -352,9 +355,15 @@ static const NSInteger MAX_TITLE_TEXT = 18;
         _timeStamp.font = [UIFont fontWithName:FONT_NAME size:14.0f];
         _timeStamp.textColor = [UIColor colorWithHexString:FONT_COLOR alpha:0.7f];
         _timeStamp.textAlignment = NSTextAlignmentCenter;
-        _timeStamp.text = @"2017/03/16";
     }
     return _timeStamp;
+}
+
+- (NSString *)systemTimeDate {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"YYYY/MM/dd"];
+    NSString *timeDate = [formatter stringFromDate:[NSDate date]];
+    return timeDate;
 }
 
 #pragma mark - 获取输入文字的Size
@@ -372,27 +381,71 @@ static const NSInteger MAX_TITLE_TEXT = 18;
                                         options:\
                       NSStringDrawingTruncatesLastVisibleLine |
                       NSStringDrawingUsesLineFragmentOrigin |
-                      NSStringDrawingUsesFontLeading |
-                      NSStringDrawingUsesDeviceMetrics
+                      NSStringDrawingUsesFontLeading
                                      attributes:attribute
                                         context:nil].size;
     return retSize;
 }
 
-#pragma mark - 获取字体
-- (void)fyy_getFontName {
-    NSArray *fontArr = [UIFont familyNames];
-    for (NSString *famName in fontArr) {
-        NSLog(@"%s", [famName UTF8String]);
-        
-        NSArray *fontNames = [UIFont fontNamesForFamilyName:famName];
-        for( NSString *fontName in fontNames ){
-            NSLog(@"字体: %s \n", [fontName UTF8String] );
-        }
-        
-        NSLog(@"--------------------");
+#pragma mark - 监测键盘是否启用
+- (void)set_addNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fyy_getKeyboardFrameHeightOfShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fyy_getKeyboardFrameHeightOfHide:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+#pragma mark 键盘弹出
+- (void)fyy_getKeyboardFrameHeightOfShow:(NSNotification *)aNotification {
+    NSDictionary *userInfo = [aNotification userInfo];
+    NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardRect = [aValue CGRectValue];
+    _keyboardH = keyboardRect.size.height;
+    
+    self.contentOffset = CGPointMake(0, 0);
+    self.contentInputBox.scrollEnabled = YES;
+    [self adjustTheHeightOfTheWriteView:YES];
+}
+
+#pragma mark 键盘落下
+- (void)fyy_getKeyboardFrameHeightOfHide:(NSNotification *)aNotification {
+    self.contentInputBox.scrollEnabled = NO;
+    [self adjustTheHeightOfTheWriteView:NO];
+}
+
+#pragma mark - 调整正文输入框的高度
+- (void)adjustTheHeightOfTheWriteView:(BOOL)keyboardShow {
+    if (keyboardShow) {
+        [self.contentInputBox mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.mas_top).with.offset(SCREEN_HEIGHT - (_keyboardH + 10));
+        }];
+    } else {
+        [self fyy_adjustWriteViewHightForShowAllText];
     }
 }
 
+#pragma mark 调整整个文稿的高度以展开显示全部的文本
+- (void)fyy_adjustWriteViewHightForShowAllText {
+    CGFloat titleInputH = CGRectGetHeight(self.titleInputBox.frame) + TOP_MARGIN;
+    CGFloat marginH = SCREEN_HEIGHT - titleInputH - BOTTOM_MARGIN;
+    
+    if (_contentTextH  < 50) {
+        _contentTextH = 50;
+    }
+    
+    CGFloat contentSizeH = titleInputH + _contentTextH + BOTTOM_MARGIN;
+    
+    if (_contentTextH > marginH) {
+        [self.contentInputBox mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.mas_top).with.offset(titleInputH + _contentTextH);
+        }];
+        self.contentSize = CGSizeMake(SCREEN_WIDTH, contentSizeH);
+        
+    } else {
+        [self.contentInputBox mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.mas_top).with.offset(SCREEN_HEIGHT - BOTTOM_MARGIN);
+        }];
+        
+        self.contentSize = CGSizeMake(SCREEN_WIDTH, SCREEN_HEIGHT);
+    }
+}
 
 @end
