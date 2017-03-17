@@ -247,6 +247,10 @@ static const CGFloat ToolViewHeight = 110;
     }
 }
 
+/**
+ *  这里还是会继续调整的，暂时先测试更换稿纸和文字颜色的功能
+ */
+#pragma mark - -------
 - (void)creatTextColorButton {
     //  颜色
     for (NSInteger idx = 0; idx < _colorArr.count; ++ idx) {
