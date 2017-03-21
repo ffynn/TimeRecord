@@ -456,7 +456,7 @@ static const NSInteger TOP_MARGIN = 60;
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:imageAttributedString];
     [attributedString appendAttributedString:returnAttributedString];
     [attributedString insertAttributedString:returnAttributedString atIndex:1];
-    [attributedString addAttributes:[self set_attributesDictionary] range:NSMakeRange(0, self.contentInputBox.selectedRange.location + 3)];
+    [attributedString addAttributes:[self set_attributesDictionary] range:NSMakeRange(0, 3)];
     return attributedString;
 }
 
