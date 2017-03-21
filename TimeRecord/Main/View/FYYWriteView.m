@@ -8,8 +8,12 @@
 
 #import "FYYWriteView.h"
 #import "FYYPromptView.h"
+#import <TYAlertController/TYAlertController.h>
+#import <TYAlertController/TYAlertView.h>
+#import "FYYImageAttachment.h"
+#import "UIImage+Helper.h"
 
-static const NSInteger MAX_TITLE_TEXT = 18;
+static const NSInteger MAX_TITLE_COUNT = 18;
 static const NSInteger BOTTOM_MARGIN = 70;
 static const NSInteger TOP_MARGIN = 60;
 
@@ -17,7 +21,34 @@ static const NSInteger TOP_MARGIN = 60;
     CGFloat   _keyboardH;         //  弹出的键盘高度
     CGFloat   _contentTextH;      //  正文内容的高度
     NSString *_textColor;         //  文字颜色
+    NSInteger _imageCount;        //  图片的数量
+    CGFloat   _imageTotalHeight;  //  图片的总高度
 }
+
+/**
+ 记录改变字体的样式
+ */
+@property (nonatomic, strong) NSMutableAttributedString *contentAttributed;
+
+/**
+ 更新内容的范围
+ */
+@property (nonatomic, assign) NSRange contentNewRange;
+
+/**
+ 更新内容的文字
+ */
+@property (nonatomic , strong) NSString *contentNewText;
+
+/**
+ 删除文字
+ */
+@property (nonatomic, assign) BOOL isDelete;
+
+/**
+ 保存插入图片的数组
+ */
+@property (nonatomic, strong) NSMutableArray *imageAttachmentMarr;
 
 @end
 
@@ -26,20 +57,22 @@ static const NSInteger TOP_MARGIN = 60;
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background_paper_1"]];
-        self.contentSize = CGSizeMake(SCREEN_WIDTH, SCREEN_HEIGHT);
-        self.showsVerticalScrollIndicator = NO;
-        [self set_addNotification];
+        
         [self setViewUI];
+        
+        [self set_addNotification];
+        [self set_initAttributedString];
     }
     return self;
 }
 
 #pragma mark - 设置视图控件布局
 - (void)setViewUI {
-    _contentTextH = 0.0f;
-    _keyboardH = 0.0f;
     _textColor = @"#411616";
+    
+    self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background_paper_1"]];
+    self.contentSize = CGSizeMake(SCREEN_WIDTH, SCREEN_HEIGHT);
+    self.showsVerticalScrollIndicator = NO;
     
     [self set_addTitleInputBoxView];
     [self set_addContentInputBoxView];
@@ -121,7 +154,6 @@ static const NSInteger TOP_MARGIN = 60;
 }
 
 #pragma mark 输入监测的代理
-
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     if (textView == self.titleInputBox) {
         [self.accessoryView setHiddenExtendingFunction:YES];
@@ -150,28 +182,36 @@ static const NSInteger TOP_MARGIN = 60;
 - (void)textViewDidChange:(UITextView *)textView {
     if (textView == self.titleInputBox) {
         NSString *titleText = textView.text;
-        
         if (titleText.length == 0) {
-            self.titlePlaceholder.alpha = 1.0f;
+            self.titlePlaceholder.hidden = NO;
         } else {
-            self.titlePlaceholder.alpha = 0.0f;
-            if (titleText.length > MAX_TITLE_TEXT) {
+            self.titlePlaceholder.hidden = YES;
+            if (titleText.length > MAX_TITLE_COUNT) {
                 [FYYPromptView showWithText:@"标题最多可输入18个字符" status:(PromptStatusWarning)];
-                textView.text = [titleText substringToIndex:MAX_TITLE_TEXT];
+                textView.text = [titleText substringToIndex:MAX_TITLE_COUNT];
             }
         }
         
         [self fyy_screeningInputHighlightingText:textView];
     
     } else if (textView == self.contentInputBox) {
-        NSString *contentText = textView.text;
-        
-        if (contentText.length == 0) {
-            self.contentPlaceholder.alpha = 0.7f;
+        if (textView.attributedText.length > 0) {
+            self.contentPlaceholder.hidden = YES;
         } else {
-            self.contentPlaceholder.alpha = 0.0f;
+            self.contentPlaceholder.hidden = NO;
         }
         
+        NSInteger textLength = textView.attributedText.length - self.contentAttributed.length;
+        
+        if (textLength > 0) {
+            self.isDelete = NO;
+            self.contentNewRange = NSMakeRange(textView.selectedRange.location - textLength, textLength);
+            self.contentNewText = [textView.text substringWithRange:self.contentNewRange];
+            
+        } else {
+            self.isDelete = YES;
+        }
+    
         [self fyy_screeningInputHighlightingText:textView];
     }
 }
@@ -184,18 +224,43 @@ static const NSInteger TOP_MARGIN = 60;
     if (!isHighlight) {
         if (textView == self.titleInputBox) {
             [self changeTitleInputBoxFrame:textView.text];
+            
         } else if (textView == self.contentInputBox) {
-            [self setContentInputBoxTextStyle:textView.text lineSpace:5.0f];
+            [self getContentInputTextHeight:textView.text attributes:[self set_attributesDictionary]];
+            [self setContentInputBoxTextStyle:textView];
         }
     }
 }
 
-#pragma mark 改变标题输入框的宽高
-/**
- 改变标题输入框的宽高
+#pragma mark 设置正文内容的文本样式
+- (void)setContentInputBoxTextStyle:(UITextView *)textView {
+    [self set_initAttributedString];
+    
+    if (self.isDelete) {
+        return;
+    }
+    
+    NSDictionary *attributesDict = [self set_attributesDictionary];
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:self.contentNewText attributes:attributesDict];
+    [self.contentAttributed replaceCharactersInRange:self.contentNewRange withAttributedString:attributedString];
+    self.contentInputBox.attributedText = self.contentAttributed;
+    self.contentInputBox.selectedRange = NSMakeRange(self.contentNewRange.location + self.contentNewRange.length, 0);
+}
 
- @param text 输入的文字
- */
+- (NSDictionary *)set_attributesDictionary {
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.alignment = NSTextAlignmentCenter;
+    paragraphStyle.lineSpacing = 5.0f;
+    
+    NSDictionary *attributesDict = @{
+                                     NSParagraphStyleAttributeName:paragraphStyle,
+                                     NSForegroundColorAttributeName:[UIColor colorWithHexString:_textColor],
+                                     NSFontAttributeName:[UIFont fontWithName:FONT_NAME size:16.0f]
+                                     };
+    return attributesDict;
+}
+
+#pragma mark 改变标题输入框的宽高
 - (void)changeTitleInputBoxFrame:(NSString *)text {
     //  标题清空恢复默认文字
     if (text.length == 0) {
@@ -255,35 +320,15 @@ static const NSInteger TOP_MARGIN = 60;
     if (!_contentPlaceholder) {
         _contentPlaceholder = [[UILabel alloc] init];
         _contentPlaceholder.font = [UIFont fontWithName:FONT_NAME size:16.0f];
-        _contentPlaceholder.textColor = [UIColor colorWithHexString:_textColor alpha:0.8f];
+        _contentPlaceholder.textColor = [UIColor colorWithHexString:_textColor alpha:0.7f];
         _contentPlaceholder.textAlignment = NSTextAlignmentCenter;
         _contentPlaceholder.text = @"输入正文";
     }
     return _contentPlaceholder;
 }
 
-#pragma mark 设置正文内容的文本样式
-- (void)setContentInputBoxTextStyle:(NSString *)text lineSpace:(CGFloat)lineSpace {
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text];
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.alignment = NSTextAlignmentCenter;
-    paragraphStyle.lineSpacing = lineSpace;
-    
-    NSDictionary *attributes = @{
-                                 NSParagraphStyleAttributeName:paragraphStyle,
-                                 NSForegroundColorAttributeName:[UIColor colorWithHexString:_textColor],
-                                 NSFontAttributeName:[UIFont fontWithName:FONT_NAME size:16.0f]
-                                 };
-    
-    [attributedString addAttributes:attributes range:NSMakeRange(0, [text length])];
-    
-    self.contentInputBox.attributedText = attributedString;
-    
-    [self changeContentInputBox:text attributes:attributes];
-}
-
-#pragma mark 正文的高度
-- (void)changeContentInputBox:(NSString *)text attributes:(NSDictionary *)attributes {
+#pragma mark 正文文字的高度
+- (void)getContentInputTextHeight:(NSString *)text attributes:(NSDictionary *)attributes {
     CGSize textSize = [text boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 40, MAXFLOAT)
                                             options:\
                           NSStringDrawingTruncatesLastVisibleLine |
@@ -292,7 +337,7 @@ static const NSInteger TOP_MARGIN = 60;
                                          attributes:attributes
                                             context:nil].size;
     
-    _contentTextH = textSize.height + 50;
+    _contentTextH = textSize.height;
 }
 
 #pragma mark - 底部打开编辑样式的按钮
@@ -317,14 +362,133 @@ static const NSInteger TOP_MARGIN = 60;
 - (void)fyy_writeInputBoxResignFirstResponder {
     if (self.titleInputBox.isFirstResponder) {
         [self.titleInputBox resignFirstResponder];
+        
     } else if (self.contentInputBox.isFirstResponder) {
         [self.contentInputBox resignFirstResponder];
     }
+    
+    _imageCount = [self getTextAttachmentImageCount];
+    [self adjustTheHeightOfTheWriteView:NO];
 }
 
 #pragma mark 内容插入图片
 - (void)fyy_writeInputBoxInsertImage {
-    NSLog(@"--- 插入图片");
+    [self openImagePickerChoosePhoto];
+}
+
+- (void)openImagePickerChoosePhoto {
+    TYAlertView *alertView = [TYAlertView alertViewWithTitle:@"插入图片" message:nil];
+    alertView.buttonDefaultBgColor = [UIColor colorWithHexString:@"#A04949"];
+    alertView.buttonCancelBgColor = [UIColor colorWithHexString:@"#999999"];
+    [alertView addAction:[TYAlertAction actionWithTitle:@"拍照" style:TYAlertActionStyleDefault handler:^(TYAlertAction *action) {
+        [self takePhoto];
+    }]];
+    
+    [alertView addAction:[TYAlertAction actionWithTitle:@"本地相册" style:TYAlertActionStyleDefault handler:^(TYAlertAction *action) {
+        [self openPhotoLibrary];
+    }]];
+    
+    [alertView addAction:[TYAlertAction actionWithTitle:@"取消" style:TYAlertActionStyleCancel handler:nil]];
+    
+    TYAlertController *alertController = [TYAlertController alertControllerWithAlertView:alertView preferredStyle:TYAlertControllerStyleActionSheet];
+    [self.vc presentViewController:alertController animated:YES completion:nil];
+}
+
+#pragma mark 拍照
+- (void)takePhoto {
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        [self presentImagePickerController:UIImagePickerControllerSourceTypeCamera];
+    }
+}
+
+#pragma mark 打开相册
+- (void)openPhotoLibrary {
+    [self presentImagePickerController:UIImagePickerControllerSourceTypePhotoLibrary];
+}
+
+- (void)presentImagePickerController:(UIImagePickerControllerSourceType)sourceType {
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    picker.delegate = self;
+    picker.sourceType = sourceType;
+    [self.vc presentViewController:picker animated:YES completion:nil];
+}
+
+#pragma mark 获取图片完成
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    [self insertImageOfTheTextView:self.contentInputBox withImage:image];
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark 指定位置插入图片
+- (void)insertImageOfTheTextView:(UITextView *)textView withImage:(UIImage *)image {
+    if (image == nil || ![image isKindOfClass:[UIImage class]]) {
+        return;
+    }
+    
+    FYYImageAttachment *attachment = [[FYYImageAttachment alloc] init];
+    attachment.image = image;
+    attachment.imageSize = [self scaleImageSize:image];
+    
+    NSAttributedString *imageAttributedString = [self insertImageDoneAutoReturn:[NSAttributedString attributedStringWithAttachment:attachment]];
+    [textView.textStorage insertAttributedString:imageAttributedString atIndex:textView.selectedRange.location];
+    textView.selectedRange = NSMakeRange(textView.selectedRange.location + 3, 0);
+    
+    [self set_initAttributedString];
+}
+
+#pragma mark 缩放插入的图片尺寸
+- (CGSize)scaleImageSize:(UIImage *)image {
+    CGFloat imageScale = image.size.width / image.size.height;
+    CGFloat imageWidth = SCREEN_WIDTH - 40;
+    CGSize imageSize = CGSizeMake(imageWidth, imageWidth / imageScale);
+    return imageSize;
+}
+
+#pragma mark - 插入图片后换行
+- (NSAttributedString *)insertImageDoneAutoReturn:(NSAttributedString *)imageAttributedString {
+    NSAttributedString *returnAttributedString = [[NSAttributedString alloc] initWithString:@"\n"];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:imageAttributedString];
+    [attributedString appendAttributedString:returnAttributedString];
+    [attributedString insertAttributedString:returnAttributedString atIndex:1];
+    [attributedString addAttributes:[self set_attributesDictionary] range:NSMakeRange(0, self.contentInputBox.selectedRange.location + 3)];
+    return attributedString;
+}
+
+#pragma mark - 遍历获取文本内容中的图片数量
+- (NSInteger)getTextAttachmentImageCount {
+    _imageTotalHeight = 0.0f;
+    [self.imageAttachmentMarr removeAllObjects];
+    [self.contentInputBox.attributedText enumerateAttribute:NSAttachmentAttributeName
+                                                    inRange:NSMakeRange(0, self.contentInputBox.attributedText.length)
+                                                    options:NSAttributedStringEnumerationReverse
+                                                 usingBlock:^(id  _Nullable value, NSRange range, BOOL * _Nonnull stop) {
+                                                     if (value && [value isKindOfClass:[FYYImageAttachment class]]) {
+                                                         [self.imageAttachmentMarr addObject:value];
+                                                     }
+                                                 }];
+    for (FYYImageAttachment *attachment in self.imageAttachmentMarr) {
+        _imageTotalHeight += attachment.imageSize.height;
+    }
+    return self.imageAttachmentMarr.count;
+}
+
+#pragma mark - 初始化字体样式
+- (void)set_initAttributedString {
+    self.contentAttributed = nil;
+    
+    self.contentAttributed = [[NSMutableAttributedString alloc] initWithAttributedString:self.contentInputBox.attributedText];
+    if (self.contentInputBox.textStorage.length > 0) {
+        self.contentPlaceholder.hidden = YES;
+        [self.contentInputBox becomeFirstResponder];
+    } else {
+        self.contentPlaceholder.hidden = NO;
+    }
 }
 
 #pragma mark 保存草稿
@@ -363,13 +527,6 @@ static const NSInteger TOP_MARGIN = 60;
 }
 
 #pragma mark - 获取输入文字的Size
-/**
- 获取文字的Size
- 
- @param text 输入的文字
- @param fontSize 文字字号
- @return 文字的Size
- */
 - (CGSize)getTextSizeWidth:(NSString *)text font:(CGFloat)fontSize {
     NSDictionary *attribute = @{NSFontAttributeName:[UIFont fontWithName:FONT_NAME size:fontSize]};
     
@@ -408,7 +565,6 @@ static const NSInteger TOP_MARGIN = 60;
 #pragma mark 键盘落下
 - (void)fyy_getKeyboardFrameHeightOfHide:(NSNotification *)aNotification {
     self.contentInputBox.scrollEnabled = NO;
-    [self adjustTheHeightOfTheWriteView:NO];
     
     if ([self.write_delegate respondsToSelector:@selector(fyy_endWrite)]) {
         [self.write_delegate fyy_endWrite];
@@ -430,16 +586,12 @@ static const NSInteger TOP_MARGIN = 60;
 - (void)fyy_adjustWriteViewHightForShowAllText {
     CGFloat titleInputH = CGRectGetHeight(self.titleInputBox.frame) + TOP_MARGIN;
     CGFloat marginH = SCREEN_HEIGHT - titleInputH - BOTTOM_MARGIN;
+    CGFloat contentH = _contentTextH + _imageTotalHeight + (_imageCount * 20);
+    CGFloat contentSizeH = titleInputH + contentH + BOTTOM_MARGIN;
     
-    if (_contentTextH  < 50) {
-        _contentTextH = 50;
-    }
-    
-    CGFloat contentSizeH = titleInputH + _contentTextH + BOTTOM_MARGIN;
-    
-    if (_contentTextH > marginH) {
+    if (contentH > marginH) {
         [self.contentInputBox mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.mas_top).with.offset(titleInputH + _contentTextH);
+            make.bottom.equalTo(self.mas_top).with.offset(titleInputH + contentH);
         }];
         self.contentSize = CGSizeMake(SCREEN_WIDTH, contentSizeH);
         
@@ -478,6 +630,14 @@ static const NSInteger TOP_MARGIN = 60;
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+}
+
+#pragma mark - 
+- (NSMutableArray *)imageAttachmentMarr {
+    if (!_imageAttachmentMarr) {
+        _imageAttachmentMarr = [NSMutableArray array];
+    }
+    return _imageAttachmentMarr;
 }
 
 @end

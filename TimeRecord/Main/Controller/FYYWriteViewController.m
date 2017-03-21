@@ -33,6 +33,7 @@
         _writeView = [[FYYWriteView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
         [_writeView fyy_showTimeStamp:YES];
         _writeView.write_delegate = self;
+        _writeView.vc = self;
     }
     return _writeView;
 }

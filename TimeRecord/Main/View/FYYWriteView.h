@@ -20,10 +20,12 @@
 
 @interface FYYWriteView : UIScrollView <
     UITextViewDelegate,
-    FYYAccessoryViewDelegate
+    FYYAccessoryViewDelegate,
+    UINavigationControllerDelegate,
+    UIImagePickerControllerDelegate
 >
 
-
+@property (nonatomic, strong) UIViewController *vc;
 @property (nonatomic, weak) id <FYYWriteDelegate> write_delegate;
 
 /**

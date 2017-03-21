@@ -9,11 +9,11 @@
 /* Begin PBXBuildFile section */
 		D843B2901E7A6AE600B2A01F /* FYYPromptView.m in Sources */ = {isa = PBXBuildFile; fileRef = D843B28F1E7A6AE600B2A01F /* FYYPromptView.m */; };
 		D843B2931E7BB8CF00B2A01F /* FYYStyleToolView.m in Sources */ = {isa = PBXBuildFile; fileRef = D843B2921E7BB8CF00B2A01F /* FYYStyleToolView.m */; };
+		D859A9EC1E7FCDC2003E1F42 /* FYYImageAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = D859A9EB1E7FCDC2003E1F42 /* FYYImageAttachment.m */; };
 		D8A37B131E791A5100FFC388 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D8A37B121E791A5100FFC388 /* main.m */; };
 		D8A37B161E791A5100FFC388 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D8A37B151E791A5100FFC388 /* AppDelegate.m */; };
 		D8A37B1C1E791A5100FFC388 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8A37B1A1E791A5100FFC388 /* Main.storyboard */; };
 		D8A37B1E1E791A5100FFC388 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8A37B1D1E791A5100FFC388 /* Assets.xcassets */; };
-		D8A37B211E791A5100FFC388 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8A37B1F1E791A5100FFC388 /* LaunchScreen.storyboard */; };
 		D8A37B2C1E791A5100FFC388 /* TimeRecordTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D8A37B2B1E791A5100FFC388 /* TimeRecordTests.m */; };
 		D8A37B371E791A5100FFC388 /* TimeRecordUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = D8A37B361E791A5100FFC388 /* TimeRecordUITests.m */; };
 		D8A37B4C1E79379400FFC388 /* FYYViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8A37B4B1E79379400FFC388 /* FYYViewController.m */; };
@@ -62,13 +62,14 @@
 		D843B28F1E7A6AE600B2A01F /* FYYPromptView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FYYPromptView.m; sourceTree = "<group>"; };
 		D843B2911E7BB8CF00B2A01F /* FYYStyleToolView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FYYStyleToolView.h; sourceTree = "<group>"; };
 		D843B2921E7BB8CF00B2A01F /* FYYStyleToolView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FYYStyleToolView.m; sourceTree = "<group>"; };
+		D859A9EA1E7FCDC2003E1F42 /* FYYImageAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FYYImageAttachment.h; sourceTree = "<group>"; };
+		D859A9EB1E7FCDC2003E1F42 /* FYYImageAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FYYImageAttachment.m; sourceTree = "<group>"; };
 		D8A37B0E1E791A5100FFC388 /* TimeRecord.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeRecord.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8A37B121E791A5100FFC388 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D8A37B141E791A5100FFC388 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D8A37B151E791A5100FFC388 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		D8A37B1B1E791A5100FFC388 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D8A37B1D1E791A5100FFC388 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		D8A37B201E791A5100FFC388 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D8A37B221E791A5100FFC388 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D8A37B271E791A5100FFC388 /* TimeRecordTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimeRecordTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8A37B2B1E791A5100FFC388 /* TimeRecordTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeRecordTests.m; sourceTree = "<group>"; };
@@ -207,7 +208,6 @@
 				D8A37B151E791A5100FFC388 /* AppDelegate.m */,
 				D8A37B1A1E791A5100FFC388 /* Main.storyboard */,
 				D8A37B1D1E791A5100FFC388 /* Assets.xcassets */,
-				D8A37B1F1E791A5100FFC388 /* LaunchScreen.storyboard */,
 				D8A37B221E791A5100FFC388 /* Info.plist */,
 				D8A37B111E791A5100FFC388 /* Supporting Files */,
 			);
@@ -279,6 +279,8 @@
 		D8A37B481E79377600FFC388 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				D859A9EA1E7FCDC2003E1F42 /* FYYImageAttachment.h */,
+				D859A9EB1E7FCDC2003E1F42 /* FYYImageAttachment.m */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -475,7 +477,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D8A37B211E791A5100FFC388 /* LaunchScreen.storyboard in Resources */,
 				D8A37B1E1E791A5100FFC388 /* Assets.xcassets in Resources */,
 				D8A37B8B1E7A3C3E00FFC388 /* FZDaBiaoSong_B06S.ttf in Resources */,
 				D8A37B1C1E791A5100FFC388 /* Main.storyboard in Resources */,
@@ -560,6 +561,7 @@
 				D8A37B771E7960A100FFC388 /* NSString+TimeDate.m in Sources */,
 				D8A37B131E791A5100FFC388 /* main.m in Sources */,
 				D8A37B8E1E7A3F8E00FFC388 /* FYYAccessoryView.m in Sources */,
+				D859A9EC1E7FCDC2003E1F42 /* FYYImageAttachment.m in Sources */,
 				D8A37B7F1E7960A100FFC388 /* UIView+FSExtension.m in Sources */,
 				D8A37B7D1E7960A100FFC388 /* UIImageView+SDWedImage.m in Sources */,
 				D8A37B551E793B5200FFC388 /* FYYWriteView.m in Sources */,
@@ -613,14 +615,6 @@
 				D8A37B1B1E791A5100FFC388 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		D8A37B1F1E791A5100FFC388 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D8A37B201E791A5100FFC388 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -719,8 +713,10 @@
 			baseConfigurationReference = 0D80FC49020E6CEED4208528 /* Pods-TimeRecord.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = XJ5P4B7MAV;
 				INFOPLIST_FILE = TimeRecord/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Fynn.TimeRecord;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -732,8 +728,10 @@
 			baseConfigurationReference = 9EEDC3DD1906263DD3D05597 /* Pods-TimeRecord.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = XJ5P4B7MAV;
 				INFOPLIST_FILE = TimeRecord/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Fynn.TimeRecord;
 				PRODUCT_NAME = "$(TARGET_NAME)";
