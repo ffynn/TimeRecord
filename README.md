@@ -21,17 +21,15 @@
 ---
 
 ◆ 现阶段完成的功能界面
-![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_1.PNG)
 ![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_2.PNG)
-![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_3.PNG)
-![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_4.PNG)
 ![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_5.PNG)
-![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_6.PNG)
+![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_7.PNG)
 
 ---
 ◆ 对项目的记录更新
 ---
 
+---
 已完成：
 
 ① 标题输入、输入折行和长度限制；
@@ -46,34 +44,33 @@
 
 ⑥ 文本字体颜色更改、文稿背景切换功能；
 
-....
+⑦ App启动图、图标制作；
 
+⑧ 文本内容插入图片；
+
+....
 ---
 待完成:
 
-① 样式编辑工具栏功能优化；
+⑨ 样式编辑工具栏功能优化；
 
-② 以长图格式保存文本；
+⑩ 以长图格式保存文本；
 
-③ 文本插入图片；
-
-④ App启动图、图标制作；
+⑪ 字体切换、字号、对齐方式等调整；
 
 ---
 未完成：
 
-① 字体切换、字号、对齐方式等调整；
+⑫ 图文预览、排版切换；
 
-② 草稿保存到本地数据库，打开重新编辑等；
+⑬ 草稿保存到本地数据库，打开重新编辑等；
 
-③ 图文预览、排版切换；
+⑭ 社会化分享功能；
 
-④ 社会化分享功能；
+⑮ 手写签字落款；
 
-⑤ 手写签字落款；
+⑯ 添加插入语音备忘；
 
-⑥ 添加插入语音备忘；
-
-⑦ 已保存文章的加载列表；
+⑰ 已保存文章的加载列表；
 
 ...
