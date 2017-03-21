@@ -2,9 +2,13 @@
 
 ◆ 这是一个支持文本录入编辑的工具、主要用于图文制作以及制作完成后的导出与分享;
 
-◆ 项目正在持续完善...
+◆ 项目正在持续完善开发(空闲时间)...
 
 ◆ 此项目文本样式以及图片素材来源于iOS版「萝卜书摘」，仅做个人练习使用，如有侵犯请联系本人删除:-)
+
+![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_0.png)
+
+◆ 简书同步更新：http://www.jianshu.com/p/20637332aaf7
 
 ---
 
@@ -21,6 +25,7 @@
 ---
 
 ◆ 现阶段完成的功能界面
+
 ![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_2.PNG)
 ![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_5.PNG)
 ![image](https://github.com/FLYang95/TimeRecord/blob/master/Screenshot/Screenshot_7.PNG)
@@ -48,7 +53,8 @@
 
 ⑧ 文本内容插入图片；
 
-....
+...
+
 ---
 待完成:
 
