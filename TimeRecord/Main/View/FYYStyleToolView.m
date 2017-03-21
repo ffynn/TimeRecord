@@ -69,7 +69,7 @@ static const CGFloat ToolViewHeight = 110;
 - (void)setViewUI {
     [self addSubview:self.openButton];
     [_openButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(60, 20));
+        make.size.mas_equalTo(CGSizeMake(SCREEN_WIDTH, 20));
         make.top.equalTo(self.mas_top).with.offset(0);
         make.centerX.equalTo(self);
     }];

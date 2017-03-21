@@ -18,6 +18,10 @@
 @end
 
 @interface FYYStyleToolView : UIView
+//<
+//    UICollectionViewDelegate,
+//    UICollectionViewDataSource
+//>
 
 @property (nonatomic, weak) id <FYYStyleToolViewDelegate> tool_delegate;
 

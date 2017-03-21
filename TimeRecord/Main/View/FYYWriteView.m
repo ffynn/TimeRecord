@@ -69,6 +69,7 @@ static const NSInteger TOP_MARGIN = 60;
 #pragma mark - 设置视图控件布局
 - (void)setViewUI {
     _textColor = @"#411616";
+//    _textColor = @"#FFFFFF";
     
     self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background_paper_1"]];
     self.contentSize = CGSizeMake(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -251,6 +252,7 @@ static const NSInteger TOP_MARGIN = 60;
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.alignment = NSTextAlignmentCenter;
     paragraphStyle.lineSpacing = 5.0f;
+    paragraphStyle.paragraphSpacing = 10.f;
     
     NSDictionary *attributesDict = @{
                                      NSParagraphStyleAttributeName:paragraphStyle,
@@ -455,7 +457,7 @@ static const NSInteger TOP_MARGIN = 60;
     NSAttributedString *returnAttributedString = [[NSAttributedString alloc] initWithString:@"\n"];
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:imageAttributedString];
     [attributedString appendAttributedString:returnAttributedString];
-    [attributedString insertAttributedString:returnAttributedString atIndex:1];
+    [attributedString insertAttributedString:returnAttributedString atIndex:0];
     [attributedString addAttributes:[self set_attributesDictionary] range:NSMakeRange(0, 3)];
     return attributedString;
 }
