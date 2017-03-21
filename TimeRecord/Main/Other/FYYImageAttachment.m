@@ -14,9 +14,7 @@
 @implementation FYYImageAttachment
 
 - (CGRect)attachmentBoundsForTextContainer:(NSTextContainer *)textContainer proposedLineFragment:(CGRect)lineFrag glyphPosition:(CGPoint)position characterIndex:(NSUInteger)charIndex {
-    CGFloat imageScale = _imageSize.width / _imageSize.height;
-    CGFloat imageWidth = SCREEN_WIDTH - 40;
-    return CGRectMake(0, 0, imageWidth, imageWidth / imageScale);
+    return CGRectMake(0, 0, _imageSize.width, _imageSize.height);
 }
 
 @end

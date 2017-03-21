@@ -445,7 +445,7 @@ static const NSInteger TOP_MARGIN = 60;
 #pragma mark 缩放插入的图片尺寸
 - (CGSize)scaleImageSize:(UIImage *)image {
     CGFloat imageScale = image.size.width / image.size.height;
-    CGFloat imageWidth = SCREEN_WIDTH - 40;
+    CGFloat imageWidth = SCREEN_WIDTH - 50;
     CGSize imageSize = CGSizeMake(imageWidth, imageWidth / imageScale);
     return imageSize;
 }
