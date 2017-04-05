@@ -17,11 +17,10 @@
 
 @end
 
-@interface FYYStyleToolView : UIView
-//<
-//    UICollectionViewDelegate,
-//    UICollectionViewDataSource
-//>
+@interface FYYStyleToolView : UIView <
+    UICollectionViewDelegate,
+    UICollectionViewDataSource
+>
 
 @property (nonatomic, weak) id <FYYStyleToolViewDelegate> tool_delegate;
 
@@ -31,26 +30,18 @@
 @property (nonatomic, strong) UIButton *openButton;
 
 /**
- 背景
+ 颜色工具
  */
-@property (nonatomic, strong) UIView *backView;
+@property (nonatomic, strong) UICollectionView *styleCollectionView;
 
 /**
- 编辑颜色按钮
+ 提示语
  */
-@property (nonatomic, strong) UIButton *colorStyle;
-
-/**
- 稿纸背景按钮
- */
-@property (nonatomic, strong) UIButton *paperStyle;
+@property (nonatomic, strong) UILabel *tipLabel;
 
 /**
  工具栏恢复默认
  */
 - (void)fyy_restoreTheDefault;
-
-@property (nonatomic, strong) NSMutableArray *colorButtonMarr;
-@property (nonatomic, strong) NSMutableArray *paperButtonMarr;
 
 @end

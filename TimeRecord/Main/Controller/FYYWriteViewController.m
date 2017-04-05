@@ -49,7 +49,7 @@
 
 - (FYYStyleToolView *)toolView {
     if (!_toolView) {
-        _toolView = [[FYYStyleToolView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - 30, SCREEN_WIDTH, 110)];
+        _toolView = [[FYYStyleToolView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - 30, SCREEN_WIDTH, 90)];
         _toolView.tool_delegate = self;
     }
     return _toolView;

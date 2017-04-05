@@ -69,8 +69,7 @@ static const NSInteger TOP_MARGIN = 60;
 #pragma mark - 设置视图控件布局
 - (void)setViewUI {
     _textColor = @"#411616";
-//    _textColor = @"#FFFFFF";
-    
+
     self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background_paper_1"]];
     self.contentSize = CGSizeMake(SCREEN_WIDTH, SCREEN_HEIGHT);
     self.showsVerticalScrollIndicator = NO;

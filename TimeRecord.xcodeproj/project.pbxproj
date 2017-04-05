@@ -10,6 +10,7 @@
 		D843B2901E7A6AE600B2A01F /* FYYPromptView.m in Sources */ = {isa = PBXBuildFile; fileRef = D843B28F1E7A6AE600B2A01F /* FYYPromptView.m */; };
 		D843B2931E7BB8CF00B2A01F /* FYYStyleToolView.m in Sources */ = {isa = PBXBuildFile; fileRef = D843B2921E7BB8CF00B2A01F /* FYYStyleToolView.m */; };
 		D859A9EC1E7FCDC2003E1F42 /* FYYImageAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = D859A9EB1E7FCDC2003E1F42 /* FYYImageAttachment.m */; };
+		D860C97E1E94D63F005E8110 /* FYYColorCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D860C97D1E94D63F005E8110 /* FYYColorCollectionViewCell.m */; };
 		D8A37B131E791A5100FFC388 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D8A37B121E791A5100FFC388 /* main.m */; };
 		D8A37B161E791A5100FFC388 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D8A37B151E791A5100FFC388 /* AppDelegate.m */; };
 		D8A37B1C1E791A5100FFC388 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8A37B1A1E791A5100FFC388 /* Main.storyboard */; };
@@ -64,6 +65,8 @@
 		D843B2921E7BB8CF00B2A01F /* FYYStyleToolView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FYYStyleToolView.m; sourceTree = "<group>"; };
 		D859A9EA1E7FCDC2003E1F42 /* FYYImageAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FYYImageAttachment.h; sourceTree = "<group>"; };
 		D859A9EB1E7FCDC2003E1F42 /* FYYImageAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FYYImageAttachment.m; sourceTree = "<group>"; };
+		D860C97C1E94D63F005E8110 /* FYYColorCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FYYColorCollectionViewCell.h; sourceTree = "<group>"; };
+		D860C97D1E94D63F005E8110 /* FYYColorCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FYYColorCollectionViewCell.m; sourceTree = "<group>"; };
 		D8A37B0E1E791A5100FFC388 /* TimeRecord.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeRecord.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8A37B121E791A5100FFC388 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D8A37B141E791A5100FFC388 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -294,6 +297,8 @@
 				D8A37B8D1E7A3F8E00FFC388 /* FYYAccessoryView.m */,
 				D843B2911E7BB8CF00B2A01F /* FYYStyleToolView.h */,
 				D843B2921E7BB8CF00B2A01F /* FYYStyleToolView.m */,
+				D860C97C1E94D63F005E8110 /* FYYColorCollectionViewCell.h */,
+				D860C97D1E94D63F005E8110 /* FYYColorCollectionViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -568,6 +573,7 @@
 				D8A37B7B1E7960A100FFC388 /* UIImage+Helper.m in Sources */,
 				D8A37B7A1E7960A100FFC388 /* UIColor+Extension.m in Sources */,
 				D8A37B4C1E79379400FFC388 /* FYYViewController.m in Sources */,
+				D860C97E1E94D63F005E8110 /* FYYColorCollectionViewCell.m in Sources */,
 				D843B2931E7BB8CF00B2A01F /* FYYStyleToolView.m in Sources */,
 				D8A37B751E7960A100FFC388 /* NSString+Helper.m in Sources */,
 				D8A37B7C1E7960A100FFC388 /* UIImage+QRCode.m in Sources */,
