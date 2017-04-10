@@ -289,7 +289,7 @@ static const NSInteger TOP_MARGIN = 60;
     [self addSubview:self.contentInputBox];
     [_contentInputBox mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(SCREEN_WIDTH - 40);
-        make.top.equalTo(_titleInputBox.mas_bottom).with.offset(30);
+        make.top.equalTo(_titleInputBox.mas_bottom).with.offset(20);
         make.bottom.equalTo(self.mas_top).with.offset(SCREEN_HEIGHT - BOTTOM_MARGIN);
         make.centerX.equalTo(self);
     }];
